@@ -1,9 +1,9 @@
 package com.app.file_operator.impl;
 
-import task1.model.player.Player;
-import task1.model.player.PlayerComparator;
-import task1.model.player.PlayerMapper;
-import task1.validator.FileExistsValidator;
+import com.app.model.player.Player;
+import com.app.model.player.PlayerComparator;
+import com.app.model.player.PlayerMapper;
+import com.app.validator.FileExistsValidator;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;

@@ -1,8 +1,7 @@
 package com.app.model.question;
 
-
-import task1.enums.DifficultLevel;
-import task1.enums.QuestionCategory;
+import com.app.enums.DifficultLevel;
+import com.app.enums.QuestionCategory;
 
 import java.util.function.Function;
 
