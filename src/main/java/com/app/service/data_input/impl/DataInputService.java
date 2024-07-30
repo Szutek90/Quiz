@@ -2,10 +2,11 @@ package com.app.service.data_input.impl;
 
 import com.app.service.data_input.DataInput;
 import com.app.service.provider.impl.QuestionsProvider;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Scanner;
 
-
+@Slf4j
 public class DataInputService implements DataInput {
     private final QuestionsProvider questionsProvider;
     private final Scanner sc;
@@ -20,7 +21,7 @@ public class DataInputService implements DataInput {
     public void getQuestionsFromUser() {
         var text = "";
         do {
-            System.out.println("Please input question and answers");
+            log.info("Please input question and answers");
             text = sc.nextLine();
             if (!text.isEmpty() && expressionIsCorrect(text)) {
                 questionsProvider.add(text);
