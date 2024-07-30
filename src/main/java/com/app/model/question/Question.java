@@ -5,6 +5,8 @@ import com.app.enums.QuestionCategory;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.Arrays;
+
 @EqualsAndHashCode
 @ToString
 public class Question {
@@ -30,7 +32,9 @@ public class Question {
 
     public static Question parse(String text) {
         var splittedFromQuestion = text.split("=");
-        var splitted = splittedFromQuestion[1].split(";");
+        var splitted = Arrays.stream(splittedFromQuestion[1].split(";"))
+                .map(t->t.replaceAll("-Tak|-Nie$", ""))
+                .toArray(String[]::new);
         return new Question(splittedFromQuestion[0], splitted[0], splitted[1],
                 splitted[2], DifficultLevel.valueOf(splitted[3]),
                 QuestionCategory.valueOf(splitted[4]));

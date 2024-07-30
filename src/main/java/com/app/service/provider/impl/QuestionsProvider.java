@@ -55,7 +55,7 @@ public class QuestionsProvider implements Provider {
     }
 
     public String getKeyByIndex(int index) {
-        return questions.keySet().toArray()[index - 1].toString();
+        return questions.keySet().toArray()[index].toString();
     }
 
     public String getKeyByIndexWithDifficultLevel(int index, DifficultLevel difficultLevel) {
@@ -65,7 +65,7 @@ public class QuestionsProvider implements Provider {
                 .collect(Collectors.toMap(QuestionMapper.toQuestionText,
                         q -> q))
                 .keySet()
-                .toArray()[index - 1]
+                .toArray()[index]
                 .toString();
 
     }
