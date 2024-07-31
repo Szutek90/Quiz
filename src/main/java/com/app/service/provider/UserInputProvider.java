@@ -2,10 +2,14 @@ package com.app.service.provider;
 
 import java.util.Scanner;
 
-public interface UserInputProvider {
-    Scanner sc = new Scanner(System.in);
+public class UserInputProvider {
+    private final Scanner sc = new Scanner(System.in);
 
-    static String getUserText() {
+    public String getUserText() {
         return sc.nextLine();
+    }
+
+    public int getUserInt() {
+        return sc.nextInt();
     }
 }

@@ -3,17 +3,17 @@ package com.app.service.quiz_service.impl;
 import com.app.data.DataGenerator;
 import com.app.enums.DifficultLevel;
 import com.app.enums.QuestionCategory;
+import com.app.service.provider.UserInputProvider;
 import com.app.service.provider.impl.QuestionsProvider;
 import com.app.service.quiz_service.GameService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 @Slf4j
 public class QuizService implements GameService {
     private final QuestionsProvider questionsProvider;
-    private final Scanner scanner = new Scanner(System.in);
+    private final UserInputProvider userInputProvider = new UserInputProvider();
 
     public QuizService(QuestionsProvider questionsProvider) {
         this.questionsProvider = questionsProvider;
@@ -61,19 +61,18 @@ public class QuizService implements GameService {
     }
 
     private QuestionCategory getCategoryFromUser() {
-        var validAnswer = "";
+        var userInput = "";
         while (true) {
-            log.info("Enter catregory\n");
-            if (scanner.hasNext()) {
-                validAnswer = scanner.next().toUpperCase();
-                try {
-                    return QuestionCategory.valueOf(validAnswer);
-                } catch (IllegalArgumentException e) {
-                    log.info("Please enter a correct category\n");
-                }
-            } else {
+            log.info("Enter category\n");
+            userInput = userInputProvider.getUserText();
+            if (userInput.isEmpty()) {
                 log.info("Please enter a valid string.");
-                scanner.next();
+                continue;
+            }
+            try {
+                return QuestionCategory.valueOf(userInput.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                log.info("Please enter a correct category\n");
             }
         }
     }
@@ -82,16 +81,11 @@ public class QuizService implements GameService {
         var answer = 0;
         var validAnswer = false;
         do {
-            if (scanner.hasNextInt()) {
-                answer = scanner.nextInt();
-                if (answer == 1 || answer == 2 || answer == 3) {
-                    validAnswer = true;
-                } else {
-                    log.info("Please type 1, 2 or 3");
-                }
+            answer = userInputProvider.getUserInt();
+            if (answer == 1 || answer == 2 || answer == 3) {
+                validAnswer = true;
             } else {
-                log.info("Please enter an integer");
-                scanner.next();
+                log.info("Please type 1, 2 or 3");
             }
         } while (!validAnswer);
         return answer;

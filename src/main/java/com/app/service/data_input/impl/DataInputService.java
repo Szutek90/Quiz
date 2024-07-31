@@ -6,20 +6,18 @@ import com.app.service.provider.impl.QuestionsProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Scanner;
-
 @Slf4j
 @RequiredArgsConstructor
 public class DataInputService implements DataInput {
     private final QuestionsProvider questionsProvider;
-
+    private final UserInputProvider userInputProvider = new UserInputProvider();
 
     @Override
     public void getQuestionsFromUser() {
         var text = "";
         do {
             log.info("Please input question and answers");
-            text = UserInputProvider.getUserText();
+            text = userInputProvider.getUserText();
             if (!text.isEmpty() && expressionIsCorrect(text)) {
                 questionsProvider.add(text);
                 questionsProvider.saveToDb();

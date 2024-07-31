@@ -12,35 +12,39 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.lang.reflect.Field;
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DataInputServiceTest {
-    @Spy
-    private QuestionsProvider questionsProvider = new QuestionsProvider("src/test/resources/questions.csv");
-
     @Mock
     private UserInputProvider userInputProvider;
+
+    @Spy
+    private QuestionsProvider questionsProvider = new QuestionsProvider("src/test/resources/questions.csv");
 
     @InjectMocks
     private DataInputService dataInputService;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         dataInputService = new DataInputService(questionsProvider);
         Mockito.doNothing().when(questionsProvider).saveToDb();
+        replaceUserInputProvider();
+    }
+
+    private void replaceUserInputProvider() throws Exception {
+        Field field = DataInputService.class.getDeclaredField("userInputProvider");
+        field.setAccessible(true);
+        field.set(dataInputService, userInputProvider);
     }
 
     @Test
-    @DisplayName("When getting question from user")
-    void test() {
-        try (MockedStatic<UserInputProvider> mockedStatic = Mockito.mockStatic(UserInputProvider.class)) {
-            mockedStatic
-                    .when(UserInputProvider::getUserText)
-                    .thenReturn("Nazwa najwyzszego szczytu w Europie?=Mont Blanc-Tak;Alpy-Nie;Everest-Nie;HARD;GEOGRAFIA");
-            Assertions.assertThatCode(() -> dataInputService.getQuestionsFromUser())
-                    .doesNotThrowAnyException();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+    @DisplayName("When getting question from user2")
+    void test1() {
+        Mockito.when(userInputProvider.getUserText())
+                .thenReturn("Nazwa najwyzszego szczytu w Europie?=Mont Blanc-Tak;Alpy-Nie;Everest-Nie;HARD;GEOGRAFIA");
+        Assertions.assertThatCode(() -> dataInputService.getQuestionsFromUser())
+                .doesNotThrowAnyException();
     }
 }
