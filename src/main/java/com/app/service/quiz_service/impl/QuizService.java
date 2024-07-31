@@ -8,6 +8,7 @@ import com.app.service.provider.impl.QuestionsProvider;
 import com.app.service.quiz_service.GameService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -27,7 +28,6 @@ public class QuizService implements GameService {
             var key = questionsProvider.getKeyWithCategoryFilter(questionCategory, value);
             score = getScore(score, key);
         }
-
         return score;
     }
 
@@ -37,10 +37,10 @@ public class QuizService implements GameService {
         var rndValues = difficultLevel != null ?
                 DataGenerator.generateUniqueRandomIntegers(questionsProvider.getSizeWithDifficultLevel(difficultLevel),
                         quantity) : DataGenerator.generateUniqueRandomIntegers(questionsProvider.getSize(), quantity);
-
+        var questions = new ArrayList<>(questionsProvider.getQuestionsWithDifficultLevel(difficultLevel).entrySet());
         for (var value : rndValues) {
-            var key = difficultLevel != null ? questionsProvider.getKeyByIndexWithDifficultLevel(value,
-                    difficultLevel) : questionsProvider.getKeyByIndex(value);
+            var q = questions.get(value-1);
+            var key = q.getKey();
             score = getScore(score, key);
         }
         return score;
@@ -51,30 +51,13 @@ public class QuizService implements GameService {
         var answers = question.from().split("=")[1].split(";");
         askQuestion(key, answers);
         var answer = getUserAnswer();
-        if (answers[answer - 1].toUpperCase().endsWith("-TAK")) {
+        if (question.answerIsCorrect(answer)) {
             log.info("To byla poprawna odpowiedz!");
             score = question.sumPoints(score);
         } else {
             log.info("To byla bledna odpowiedz");
         }
         return score;
-    }
-
-    private QuestionCategory getCategoryFromUser() {
-        var userInput = "";
-        while (true) {
-            log.info("Enter category\n");
-            userInput = userInputProvider.getUserText();
-            if (userInput.isEmpty()) {
-                log.info("Please enter a valid string.");
-                continue;
-            }
-            try {
-                return QuestionCategory.valueOf(userInput.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                log.info("Please enter a correct category\n");
-            }
-        }
     }
 
     private int getUserAnswer() {

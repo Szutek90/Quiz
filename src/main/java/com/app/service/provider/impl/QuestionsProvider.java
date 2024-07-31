@@ -50,7 +50,7 @@ public class QuestionsProvider implements Provider {
                 .collect(Collectors.toMap(QuestionMapper.toQuestionText,
                         q -> q));
         return filtered.keySet()
-                .toArray()[index-1]
+                .toArray()[index - 1]
                 .toString();
     }
 
@@ -94,5 +94,11 @@ public class QuestionsProvider implements Provider {
 
     public Question getValue(String key) {
         return questions.get(key);
+    }
+
+    public Map<String, Question> getQuestionsWithDifficultLevel(DifficultLevel difficultLevel) {
+        return questions.entrySet().stream()
+                .filter(entry -> QuestionMapper.toDifficultLevel.apply(entry.getValue()).equals(difficultLevel))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

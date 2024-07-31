@@ -33,7 +33,7 @@ public class Question {
     public static Question parse(String text) {
         var splittedFromQuestion = text.split("=");
         var splitted = Arrays.stream(splittedFromQuestion[1].split(";"))
-                .map(t->t.replaceAll("-Tak|-Nie$", ""))
+                .map(t -> t.replaceAll("-Tak|-Nie$", ""))
                 .toArray(String[]::new);
         return new Question(splittedFromQuestion[0], splitted[0], splitted[1],
                 splitted[2], DifficultLevel.valueOf(splitted[3]),
@@ -47,5 +47,9 @@ public class Question {
 
     public int sumPoints(int points) {
         return points + difficultLevel.getValue();
+    }
+
+    public boolean answerIsCorrect(int answer) {
+        return answer == 1;
     }
 }
