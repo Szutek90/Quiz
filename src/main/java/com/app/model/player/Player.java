@@ -6,7 +6,6 @@ import lombok.ToString;
 import java.time.LocalDate;
 
 @EqualsAndHashCode
-@ToString
 public class Player {
     private static int idCounter = 0;
     private final String name;
@@ -41,5 +40,10 @@ public class Player {
         var playerData = text.split(":");
         return new Player(Integer.parseInt(playerData[0]), playerData[1],
                 LocalDate.parse(playerData[2]), Integer.parseInt(playerData[3]));
+    }
+
+    @Override
+    public String toString() {
+        return id + ":" + name + ":" + dateOfScore + ":" + score;
     }
 }

@@ -57,7 +57,9 @@ public class ScoresProvider implements Provider {
                     .filter(p -> p.givenDataIsAfterOrEqual(to) &&
                             p.giveDataIsBeforeOrEqual(from))
                     .toList();
-            topScores.put(score.getKey(), players);
+            if(!players.isEmpty()) {
+                topScores.put(score.getKey(), players);
+            }
         }
         return topScores;
     }

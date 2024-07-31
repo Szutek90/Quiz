@@ -1,33 +1,30 @@
 package com.app.service.data_input.impl;
 
 import com.app.service.data_input.DataInput;
+import com.app.service.provider.UserInputProvider;
 import com.app.service.provider.impl.QuestionsProvider;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Scanner;
 
 @Slf4j
+@RequiredArgsConstructor
 public class DataInputService implements DataInput {
     private final QuestionsProvider questionsProvider;
-    private final Scanner sc;
 
 
-    public DataInputService(QuestionsProvider questionsProvider) {
-        this.questionsProvider = questionsProvider;
-        sc = new Scanner(System.in);
-    }
-
-@Override
+    @Override
     public void getQuestionsFromUser() {
         var text = "";
         do {
             log.info("Please input question and answers");
-            text = sc.nextLine();
+            text = UserInputProvider.getUserText();
             if (!text.isEmpty() && expressionIsCorrect(text)) {
                 questionsProvider.add(text);
+                questionsProvider.saveToDb();
             }
-        } while (!text.isEmpty());
-        questionsProvider.saveToDb();
+        } while (text.isEmpty());
     }
 
 
